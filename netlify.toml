@@ -1,0 +1,10 @@
+[build]
+publish = "dist/client"
+command = "yarn build"
+
+[[edge_functions]]
+path = "/*"
+function = "handler"
+
+[dev]
+framework = "#static"
