@@ -13,8 +13,7 @@
     "build:client": "vite build --outDir dist/client --manifest",
     "build:ssr": "cross-env WORKER=true vite build --ssr @netlify-labs/hydrogen-platform/handler",
     "test": "WATCH=true vitest",
-    "test:ci": "yarn build && vitest run",
-    "ntl": "ntl-internal"
+    "test:ci": "yarn build && vitest run"
   },
   "prettier": "@shopify/prettier-config",
   "devDependencies": {
