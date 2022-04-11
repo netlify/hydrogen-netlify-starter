@@ -1,6 +1,6 @@
 import {defineConfig} from 'vite';
 import hydrogen from '@shopify/hydrogen/plugin';
-import netlifyPlugin from '@netlify-labs/hydrogen-platform/plugin';
+import netlifyPlugin from '@netlify/hydrogen-platform/plugin';
 import shopifyConfig from './shopify.config';
 
 // https://vitejs.dev/config/
