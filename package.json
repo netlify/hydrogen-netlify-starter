@@ -17,7 +17,6 @@
   },
   "prettier": "@shopify/prettier-config",
   "devDependencies": {
-    "netlify-cli": "^9.16.0",
     "@netlify/hydrogen-platform": "^0.0.4",
     "@shopify/prettier-config": "^1.1.2",
     "@shopify/stylelint-plugin": "^10.0.1",
