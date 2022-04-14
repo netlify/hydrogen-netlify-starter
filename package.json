@@ -11,15 +11,13 @@
     "lint:css": "stylelint ./src/**/*.{css,sass,scss}",
     "build": "run-s build:client build:ssr",
     "build:client": "vite build --outDir dist/client --manifest",
-    "build:ssr": "cross-env WORKER=true vite build --ssr @netlify-labs/hydrogen-platform/handler",
+    "build:ssr": "cross-env WORKER=true vite build --ssr @netlify/hydrogen-platform/handler",
     "test": "WATCH=true vitest",
-    "test:ci": "yarn build && vitest run",
-    "ntl": "ntl-internal"
+    "test:ci": "yarn build && vitest run"
   },
   "prettier": "@shopify/prettier-config",
   "devDependencies": {
-    "@netlify-labs/cli-internal": "^2.1.0",
-    "@netlify-labs/hydrogen-platform": "^0.0.4",
+    "@netlify/hydrogen-platform": "^0.0.4",
     "@shopify/prettier-config": "^1.1.2",
     "@shopify/stylelint-plugin": "^10.0.1",
     "@tailwindcss/typography": "^0.5.2",
