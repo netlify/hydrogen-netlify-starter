@@ -1,5 +1,7 @@
 # Hydrogen App
 
+<a href="https://app.netlify.com/start/deploy?repository=https://github.com/hydrogen-netlify-starter"><img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify"></a>
+
 Hydrogen is a React framework and SDK that you can use to build fast and dynamic Shopify custom storefronts.
 
 [Check out the docs](https://shopify.dev/custom-storefronts/hydrogen)
