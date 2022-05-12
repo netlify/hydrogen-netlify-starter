@@ -9,21 +9,27 @@ export async function startHydrogenServer() {
     : await createNodeServer();
 
   const browser = await chromium.launch();
-  const page = await browser.newPage();
+  const url = (pathname: string) => `http://localhost:${app.port}${pathname}`;
+
+  const newPage = async () => {
+    const page = await browser.newPage();
+    return {
+      page,
+      visit: async (pathname) => page.goto(url(pathname)),
+    };
+  };
 
   const cleanUp = async () => {
     await browser.close();
     await app.server.close();
   };
 
-  const url = (pathname: string) => `http://localhost:${app.port}${pathname}`;
-
-  const visit = async (pathname: string) => page.goto(url(pathname));
-
-  return {url, page, cleanUp, visit, watchForUpdates: () => {}};
+  return {url, newPage, cleanUp, watchForUpdates: () => {}};
 }
 
 async function createNodeServer() {
+  // @ts-ignore
+  // eslint-disable-next-line node/no-missing-import
   const {createServer} = await import('../dist/server');
   const app = (await createServer()).app;
   const server = app.listen(0) as Server;
