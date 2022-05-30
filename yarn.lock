@@ -769,10 +769,10 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@shopify/cli-hydrogen@2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@shopify/cli-hydrogen/-/cli-hydrogen-2.0.8.tgz#accf4b6f91d9b9cc57138be363869e5632b01675"
-  integrity sha512-NGuSmMbaTa0m7i+IrdjE/W1Hb152/U7Q2jdSdHjN+mVONHpPVm2/9Cfh2l0CbQzPaZfT+n3RyRFIXEgB5ZHrrg==
+"@shopify/cli-hydrogen@2.0.14":
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/@shopify/cli-hydrogen/-/cli-hydrogen-2.0.14.tgz#906830af47d16dcff18907c1c4ecaa546358ab02"
+  integrity sha512-A3vOomcn6mgdxF5zbNkgxsl5kT6B5g+Ebl+76otJYg4a8mxtLya61hJBuzV2MNHU1q5/vX7+JlzTb8RDIP02rw==
   dependencies:
     "@oclif/core" "1.7.0"
     "@shopify/mini-oxygen" "^0.0.5"

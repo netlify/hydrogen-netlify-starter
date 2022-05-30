@@ -36,7 +36,7 @@
     "vite": "^2.9.0",
     "vitest": "^0.5.9",
     "@shopify/cli": "1.1.1",
-    "@shopify/cli-hydrogen": "2.0.8"
+    "@shopify/cli-hydrogen": "2.0.14"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
