@@ -534,18 +534,18 @@
   dependencies:
     "@miniflare/shared" "2.4.0"
 
-"@netlify/hydrogen-platform@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@netlify/hydrogen-platform/-/hydrogen-platform-0.0.2.tgz#61f1f95862723a866e83adf5ab5ba10ecd8451c8"
-  integrity sha512-gE4z6z7i+LKO8xZ9RqaXZaSWBQItzrrBPF8XL5duRQr55dQYDMZnXPhXM0YQB1u0WrB3MTLs3jpNSU74aI3XGA==
+"@netlify/hydrogen-platform@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@netlify/hydrogen-platform/-/hydrogen-platform-1.0.0.tgz#8f843aa4904a65cb81e42a4ffdfa6738a5204423"
+  integrity sha512-vQjkQ0wXO26j83Sf4kD7qrEhGcpLKh5sXtpKlW+TKi4Gz13a2HjUiY/Rm8G6EjmqfuUR39gK6BKZl+W6oj5JKg==
   dependencies:
-    "@netlify/vite-plugin-netlify-edge" "^0.0.1"
+    "@netlify/vite-plugin-netlify-edge" "^1.1.0"
     magic-string "^0.26.1"
 
-"@netlify/vite-plugin-netlify-edge@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@netlify/vite-plugin-netlify-edge/-/vite-plugin-netlify-edge-0.0.1.tgz#81f0e500ec34fd3cd41aa6dac50c2f7723141f59"
-  integrity sha512-eJIoDr4sb6VN8Gt4waxPn23Wq2ocLMwxDKQru9f3fcSdCn4ufOW+V50AwO0hDqhUN+xJXqtAnfuPbacDbzh/Fg==
+"@netlify/vite-plugin-netlify-edge@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@netlify/vite-plugin-netlify-edge/-/vite-plugin-netlify-edge-1.1.0.tgz#7ef56bad3bf14b133d493735c07e5f5e5f2573fe"
+  integrity sha512-Z99j8uVW1pD/Ye9Bfm9r3wMQsvWkyuh1w/G721L7oKg4aaut6onWIxelu4N/uVM9qFFtZ2u+xWWJEdOcr5iiOA==
   dependencies:
     fast-glob "^3.2.11"
 
