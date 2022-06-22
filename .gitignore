@@ -78,4 +78,5 @@ jspm_packages/
 
 # Vite output
 dist
+
 .netlify

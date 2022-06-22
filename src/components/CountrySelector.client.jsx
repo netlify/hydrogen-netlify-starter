@@ -1,56 +1,92 @@
-import {useState, Suspense} from 'react';
-import {useCountry, fetchSync} from '@shopify/hydrogen/client';
+import {useCallback, useState, Suspense} from 'react';
+import {useLocalization, fetchSync} from '@shopify/hydrogen';
+// @ts-expect-error @headlessui/react incompatibility with node16 resolution
 import {Listbox} from '@headlessui/react';
-import SpinnerIcon from './SpinnerIcon.client';
+
+import {IconCheck, IconCaret} from '~/components';
+import {useMemo} from 'react';
 
 /**
  * A client component that selects the appropriate country to display for products on a website
  */
-export default function CountrySelector() {
+export function CountrySelector() {
   const [listboxOpen, setListboxOpen] = useState(false);
+  const {
+    country: {isoCode},
+  } = useLocalization();
+  const currentCountry = useMemo(() => {
+    const regionNamesInEnglish = new Intl.DisplayNames(['en'], {
+      type: 'region',
+    });
 
-  const [selectedCountry, setSelectedCountry] = useCountry();
+    return {
+      name: regionNamesInEnglish.of(isoCode),
+      isoCode: isoCode,
+    };
+  }, [isoCode]);
+
+  const setCountry = useCallback(
+    ({isoCode: newIsoCode}) => {
+      const currentPath = window.location.pathname;
+      let redirectPath;
+
+      if (newIsoCode !== 'US') {
+        if (currentCountry.isoCode === 'US') {
+          redirectPath = `/${newIsoCode.toLowerCase()}${currentPath}`;
+        } else {
+          redirectPath = `/${newIsoCode.toLowerCase()}${currentPath.substring(
+            currentPath.indexOf('/', 1),
+          )}`;
+        }
+      } else {
+        redirectPath = `${currentPath.substring(currentPath.indexOf('/', 1))}`;
+      }
+
+      window.location.href = redirectPath;
+    },
+    [currentCountry],
+  );
 
   return (
-    <div className="hidden lg:block">
-      <Listbox onChange={setSelectedCountry}>
+    <div className="relative">
+      <Listbox onChange={setCountry}>
+        {/* @ts-expect-error @headlessui/react incompatibility with node16 resolution */}
         {({open}) => {
           setTimeout(() => setListboxOpen(open));
           return (
             <>
-              <Listbox.Button className="font-medium text-sm h-8 p-2 flex items-center">
-                <span className="mr-4">{selectedCountry.name}</span>
-                <ArrowIcon isOpen={open} />
+              <Listbox.Button
+                className={`flex items-center justify-between w-full py-3 px-4 border ${
+                  open ? 'rounded-b md:rounded-t md:rounded-b-none' : 'rounded'
+                } border-contrast/30 dark:border-white`}
+              >
+                <span className="">{currentCountry.name}</span>
+                <IconCaret direction={open ? 'up' : 'down'} />
               </Listbox.Button>
 
-              <Listbox.Options className="absolute z-10 mt-2">
-                <div className="bg-white p-4 rounded-lg drop-shadow-2xl overflow-y-auto h-64">
-                  <Listbox.Option
-                    disabled
-                    className="p-2 text-md text-left font-medium uppercase"
-                  >
-                    Country
-                  </Listbox.Option>
-                  {listboxOpen && (
-                    <Suspense
-                      fallback={
-                        <div className="flex justify-center">
-                          <SpinnerIcon />
-                        </div>
-                      }
-                    >
-                      <Countries
-                        selectedCountry={selectedCountry}
-                        getClassName={(active) => {
-                          return (
-                            `w-36 py-2 px-3 flex justify-between items-center text-left cursor-pointer` +
-                            `rounded ${active ? 'bg-gray-200' : null}`
-                          );
-                        }}
-                      />
-                    </Suspense>
-                  )}
-                </div>
+              <Listbox.Options
+                className={`border-t-contrast/30 border-contrast/30 bg-primary dark:bg-contrast absolute bottom-12 z-10 grid
+                h-48 w-full overflow-y-scroll rounded-t border dark:border-white px-2 py-2
+                transition-[max-height] duration-150 sm:bottom-auto md:rounded-b md:rounded-t-none
+                md:border-t-0 md:border-b ${
+                  listboxOpen ? 'max-h-48' : 'max-h-0'
+                }`}
+              >
+                {listboxOpen && (
+                  <Suspense fallback={<div className="p-2">Loading…</div>}>
+                    {/* @ts-expect-error @headlessui/react incompatibility with node16 resolution */}
+                    <Countries
+                      selectedCountry={currentCountry}
+                      getClassName={(active) => {
+                        return `text-contrast dark:text-primary bg-primary 
+                        dark:bg-contrast w-full p-2 transition rounded 
+                        flex justify-start items-center text-left cursor-pointer ${
+                          active ? 'bg-primary/10' : null
+                        }`;
+                      }}
+                    />
+                  </Suspense>
+                )}
               </Listbox.Options>
             </>
           );
@@ -61,63 +97,29 @@ export default function CountrySelector() {
 }
 
 export function Countries({selectedCountry, getClassName}) {
-  const countries = fetchSync('/countries').json();
+  const countries = fetchSync('/api/countries').json();
 
-  return countries.map((country) => {
+  return (countries || []).map((country) => {
     const isSelected = country.isoCode === selectedCountry.isoCode;
+
     return (
       <Listbox.Option key={country.isoCode} value={country}>
+        {/* @ts-expect-error @headlessui/react incompatibility with node16 resolution */}
         {({active}) => (
-          <div className={getClassName(active)}>
+          <div
+            className={`text-contrast dark:text-primary ${getClassName(
+              active,
+            )}`}
+          >
             {country.name}
-            {isSelected ? <CheckIcon /> : null}
+            {isSelected ? (
+              <span className="ml-2">
+                <IconCheck />
+              </span>
+            ) : null}
           </div>
         )}
       </Listbox.Option>
     );
   });
-}
-
-export function CheckIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z"
-        stroke="#354CF6"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-export function ArrowIcon({isOpen}) {
-  return (
-    <svg
-      className={`transition-transform duration-300 ${
-        isOpen ? 'rotate-180' : null
-      }`}
-      aria-hidden="true"
-      width="10"
-      height="6"
-      viewBox="0 0 10 6"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M0.292893 0.292893C0.683416 -0.097631 1.31658 -0.097631 1.7071 0.292893L4.99999 3.58579L8.29288 0.292893C8.6834 -0.0976311 9.31657 -0.0976311 9.70709 0.292893C10.0976 0.683417 10.0976 1.31658 9.70709 1.70711L5.7071 5.70711C5.31657 6.09763 4.68341 6.09763 4.29289 5.70711L0.292893 1.70711C-0.0976309 1.31658 -0.0976309 0.683417 0.292893 0.292893Z"
-        fill="#374151"
-      />
-    </svg>
-  );
 }

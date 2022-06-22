@@ -1,28 +1,47 @@
-import renderHydrogen from '@shopify/hydrogen/entry-server';
-import {Router, Route, FileRoutes, ShopifyProvider} from '@shopify/hydrogen';
 import {Suspense} from 'react';
-import DefaultSeo from './components/DefaultSeo.server';
-import NotFound from './components/NotFound.server';
-import LoadingFallback from './components/LoadingFallback';
-import CartProvider from './components/CartProvider.client';
+import renderHydrogen from '@shopify/hydrogen/entry-server';
 import {
+  FileRoutes,
   PerformanceMetrics,
   PerformanceMetricsDebug,
-} from '@shopify/hydrogen/client';
+  Route,
+  Router,
+  ShopifyAnalytics,
+  ShopifyProvider,
+  LocalizationProvider,
+  CartProvider,
+} from '@shopify/hydrogen';
 
-function App() {
+import {HeaderFallback} from '~/components';
+import {DefaultSeo, NotFound} from '~/components/index.server';
+
+function App({routes, request}) {
+  const pathname = new URL(request.normalizedUrl).pathname;
+  const localeMatch = /^\/([a-z]{2})(\/|$)/i.exec(pathname);
+  const countryCode = localeMatch ? localeMatch[1] : undefined;
+
+  const isHome = pathname === `/${countryCode ? countryCode + '/' : ''}`;
+
   return (
-    <Suspense fallback={<LoadingFallback />}>
+    <Suspense fallback={<HeaderFallback isHome={isHome} />}>
       <ShopifyProvider>
-        <CartProvider>
-          <DefaultSeo />
-          <Router>
-            <FileRoutes />
-            <Route path="*" page={<NotFound />} />
-          </Router>
-        </CartProvider>
-        <PerformanceMetrics />
-        {process.env.LOCAL_DEV && <PerformanceMetricsDebug />}
+        <LocalizationProvider countryCode={countryCode}>
+          <CartProvider countryCode={countryCode}>
+            <Suspense>
+              <DefaultSeo />
+            </Suspense>
+            <Router>
+              <FileRoutes
+                basePath={countryCode ? `/${countryCode}/` : undefined}
+                routes={routes}
+              />
+              <Route path="*" page={<NotFound />} />
+            </Router>
+          </CartProvider>
+          <PerformanceMetrics />
+          {import.meta.env.DEV && <PerformanceMetricsDebug />}
+          <ShopifyAnalytics />
+        </LocalizationProvider>
       </ShopifyProvider>
     </Suspense>
   );

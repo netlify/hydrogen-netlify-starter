@@ -1,16 +1,13 @@
-/**
- * This API endpoint generates a robots.txt file. Use this to control
- * access to your resources from SEO crawlers.
- * Learn more: https://developers.google.com/search/docs/advanced/robots/create-robots-txt
- */
-
-export default function RobotsTxt({request, response}) {
-  response.doNotStream();
-  response.headers.set('content-type', 'text/plain');
-
+export async function api(request) {
   const url = new URL(request.url);
 
-  return response.send(robotsTxtData({url: url.origin}));
+  return new Response(robotsTxtData({url: url.origin}), {
+    headers: {
+      'content-type': 'text/plain',
+      // Cache for 24 hours
+      'cache-control': `max-age=${60 * 60 * 24}`,
+    },
+  });
 }
 
 function robotsTxtData({url}) {
@@ -36,5 +33,5 @@ Disallow: /orders
 
 User-agent: Pinterest
 Crawl-delay: 1
-`;
+`.trim();
 }
