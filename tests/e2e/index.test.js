@@ -18,12 +18,8 @@ describe('index', () => {
     await hydrogen.cleanUp();
   });
 
-  it('should have the correct title', async () => {
-    await session.visit('/');
-    const heading = await session.page.locator('h1').first();
-    expect(heading).not.toBeNull();
-
-    const text = await heading.textContent();
-    expect(text).toBe('Hello, Hydrogen');
+  it('should be a 200 response', async () => {
+    const response = await session.visit('/');
+    expect(response.status()).toBe(200);
   }, 60000);
 });

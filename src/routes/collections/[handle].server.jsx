@@ -1,76 +1,115 @@
-import {useShop, useShopQuery, flattenConnection, Seo} from '@shopify/hydrogen';
-import gql from 'graphql-tag';
+import {Suspense} from 'react';
+import {
+  gql,
+  Seo,
+  ShopifyAnalyticsConstants,
+  useServerAnalytics,
+  useLocalization,
+  useShopQuery,
+} from '@shopify/hydrogen';
 
-import LoadMoreProducts from '../../components/LoadMoreProducts.client';
-import Layout from '../../components/Layout.server';
-import ProductCard from '../../components/ProductCard';
-import NotFound from '../../components/NotFound.server';
+import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
+import {PageHeader, ProductGrid, Section, Text} from '~/components';
+import {NotFound, Layout} from '~/components/index.server';
 
-export default function Collection({
-  country = {isoCode: 'US'},
-  collectionProductCount = 24,
-  params,
-}) {
-  const {languageCode} = useShop();
+const pageBy = 48;
 
+export default function Collection({params}) {
   const {handle} = params;
-  const {data} = useShopQuery({
-    query: QUERY,
+  const {
+    language: {isoCode: language},
+    country: {isoCode: country},
+  } = useLocalization();
+
+  const {
+    data: {collection},
+  } = useShopQuery({
+    query: COLLECTION_QUERY,
     variables: {
       handle,
-      country: country.isoCode,
-      language: languageCode,
-      numProducts: collectionProductCount,
+      language,
+      country,
+      pageBy,
     },
     preload: true,
   });
 
-  if (data?.collection == null) {
-    return <NotFound />;
+  if (!collection) {
+    return <NotFound type="collection" />;
   }
 
-  const collection = data.collection;
-  const products = flattenConnection(collection.products);
-  const hasNextPage = data.collection.products.pageInfo.hasNextPage;
+  useServerAnalytics({
+    shopify: {
+      pageType: ShopifyAnalyticsConstants.pageType.collection,
+      resourceId: collection.id,
+    },
+  });
 
   return (
     <Layout>
-      {/* the seo object will be expose in API version 2022-04 or later */}
-      <Seo type="collection" data={collection} />
-      <h1 className="font-bold text-4xl md:text-5xl text-gray-900 mb-6 mt-6">
-        {collection.title}
-      </h1>
-      <div
-        dangerouslySetInnerHTML={{__html: collection.descriptionHtml}}
-        className="text-lg"
-      />
-      <p className="text-sm text-gray-500 mt-5 mb-5">
-        {products.length} {products.length > 1 ? 'products' : 'product'}
-      </p>
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        {products.map((product) => (
-          <li key={product.id}>
-            <ProductCard product={product} />
-          </li>
-        ))}
-      </ul>
-      {hasNextPage && (
-        <LoadMoreProducts startingCount={collectionProductCount} />
-      )}
+      <Suspense>
+        <Seo type="collection" data={collection} />
+      </Suspense>
+      <PageHeader heading={collection.title}>
+        {collection?.description && (
+          <div className="flex items-baseline justify-between w-full">
+            <div>
+              <Text format width="narrow" as="p" className="inline-block">
+                {collection.description}
+              </Text>
+            </div>
+          </div>
+        )}
+      </PageHeader>
+      <Section>
+        <ProductGrid
+          key="collections"
+          collection={collection}
+          url={`/collections/${handle}?country=${country}`}
+        />
+      </Section>
     </Layout>
   );
 }
 
-const QUERY = gql`
+// API endpoint that returns paginated products for this collection
+// @see templates/demo-store/src/components/product/ProductGrid.client.tsx
+export async function api(request, {params, queryShop}) {
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', {
+      status: 405,
+      headers: {Allow: 'POST'},
+    });
+  }
+  const url = new URL(request.url);
+
+  const cursor = url.searchParams.get('cursor');
+  const country = url.searchParams.get('country');
+  const {handle} = params;
+
+  return await queryShop({
+    query: PAGINATE_COLLECTION_QUERY,
+    variables: {
+      handle,
+      cursor,
+      pageBy,
+      country,
+    },
+  });
+}
+
+const COLLECTION_QUERY = gql`
+  ${PRODUCT_CARD_FRAGMENT}
   query CollectionDetails(
     $handle: String!
     $country: CountryCode
     $language: LanguageCode
-    $numProducts: Int!
+    $pageBy: Int!
+    $cursor: String
   ) @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
+      id
       title
-      descriptionHtml
       description
       seo {
         description
@@ -83,51 +122,36 @@ const QUERY = gql`
         height
         altText
       }
-      products(first: $numProducts) {
-        edges {
-          node {
-            title
-            vendor
-            handle
-            descriptionHtml
-            compareAtPriceRange {
-              maxVariantPrice {
-                currencyCode
-                amount
-              }
-              minVariantPrice {
-                currencyCode
-                amount
-              }
-            }
-            variants(first: 1) {
-              edges {
-                node {
-                  id
-                  title
-                  availableForSale
-                  image {
-                    id
-                    url
-                    altText
-                    width
-                    height
-                  }
-                  priceV2 {
-                    currencyCode
-                    amount
-                  }
-                  compareAtPriceV2 {
-                    currencyCode
-                    amount
-                  }
-                }
-              }
-            }
-          }
+      products(first: $pageBy, after: $cursor) {
+        nodes {
+          ...ProductCard
         }
         pageInfo {
           hasNextPage
+          endCursor
+        }
+      }
+    }
+  }
+`;
+
+const PAGINATE_COLLECTION_QUERY = gql`
+  ${PRODUCT_CARD_FRAGMENT}
+  query CollectionPage(
+    $handle: String!
+    $pageBy: Int!
+    $cursor: String
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    collection(handle: $handle) {
+      products(first: $pageBy, after: $cursor) {
+        nodes {
+          ...ProductCard
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }
