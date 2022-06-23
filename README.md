@@ -38,6 +38,8 @@ This template will show you how to create a sample custom storefront that can be
 
 ### Building for production
 
+To build a production-ready instance of the application, run the following command:
+
 ```bash
 npm run build
 ```
