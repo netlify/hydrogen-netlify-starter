@@ -1,18 +1,18 @@
-# Hydrogen Demo Store
+# Hydrogen Demo Store Starter Template
 
 <a href="https://app.netlify.com/start/deploy?repository=https://github.com/netlify/hydrogen-netlify-starter"><img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify"></a>
 
-Hydrogen is a React framework and SDK that you can use to build fast and dynamic Shopify custom storefronts.
-
-[Check out the docs](https://shopify.dev/custom-storefronts/hydrogen)
+[Hydrogen](https://shopify.dev/custom-storefronts/hydrogen) is a React framework and Software Development Kit (SDK) that can be used to build fast and dynamic custom Shopify storefronts.
 
 ## Getting started
 
 **Requirements:**
 
-- Node.js version 16.5.0 or higher
+- [Node.js](https://nodejs.org/en/) version 16.5.0 or higher
 
-## Running the dev server
+## Running the dev server locally
+
+1. Clone the repositoritory to your computer:
 
 Then `cd` into the new directory and run:
 
