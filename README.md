@@ -4,13 +4,15 @@
 
 [Hydrogen](https://shopify.dev/custom-storefronts/hydrogen) is a React framework and Software Development Kit (SDK) that can be used to build fast and dynamic custom Shopify storefronts.
 
+This template will show you how to create a sample custom storefront that can be hosted on Netlify.
+
 ## Getting started
 
 **Requirements:**
 
 - [Node.js](https://nodejs.org/en/) version 16.5.0 or higher
 
-## Running the dev server locally
+### Running the dev server locally
 
 1. Clone the repositoritory to your computer:
     ```bash
@@ -22,7 +24,7 @@
     cd hydrogen-netlify-starter
     ```
 
-3. Update `hydrogen.config.js` with your shop's domain and Storefront API token.
+3. Update [`hydrogen.config.js`](hydrogen.config.js) with your shop's domain (replace the `storeDomain` sample value) and [Storefront API token](https://shopify.dev/api/examples/storefront-api#step-2-generate-a-storefront-api-access-token) (replace the `storefrontToken` sample value).
 
 4. Install the package dependencies:
     ```bash
@@ -34,17 +36,26 @@
     npm run dev
     ```
 
-## Building for production
+### Building for production
 
 ```bash
 npm run build
 ```
 
-## Previewing a production build
+### Previewing a production build
 
-To run a local preview of your Hydrogen app in an environment similar to Netlify, build your Hydrogen app and then run `npm run preview`:
+To run a local preview of your Hydrogen app in an environment similar to Netlify:
 
-```bash
-npm run build
-npm run preview
-```
+1. Build your Hydrogen app:
+    ```bash
+    npm run build
+    ```
+
+2. Run the preview command:
+    ```bash
+    npm run preview
+    ```
+
+## Questions and troubleshooting
+
+If you found an issue with the code [in this repository](https://github.com/netlify/hydrogen-netlify-starter/), feel free to open an issue or let us know [in the Netlify Forums](https://answers.netlify.com/).
