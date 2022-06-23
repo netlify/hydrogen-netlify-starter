@@ -13,15 +13,26 @@
 ## Running the dev server locally
 
 1. Clone the repositoritory to your computer:
+    ```bash
+    git clone https://github.com/netlify/hydrogen-netlify-starter
+    ```
 
-Then `cd` into the new directory and run:
+2. Navigate to the repostitory folder:
+    ```bash
+    cd hydrogen-netlify-starter
+    ```
 
-```bash
-npm install
-npm run dev
-```
+3. Update `hydrogen.config.js` with your shop's domain and Storefront API token.
 
-Remember to update `hydrogen.config.js` with your shop's domain and Storefront API token!
+4. Install the package dependencies:
+    ```bash
+    npm install
+    ```
+
+5. Start the application:
+    ```bash
+    npm run dev
+    ```
 
 ## Building for production
 
