@@ -4,7 +4,6 @@ import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import {FeaturedCollections} from '~/components';
 import {ProductSwimlane} from '~/components/index.server';
 import {PAGINATION_SIZE} from '~/lib/const';
-import {Suspense} from 'react';
 
 export function NoResultRecommendations({country, language}) {
   const {data} = useShopQuery({
@@ -18,7 +17,7 @@ export function NoResultRecommendations({country, language}) {
   });
 
   return (
-    <Suspense>
+    <>
       <FeaturedCollections
         title="Trending Collections"
         data={data.featuredCollections.nodes}
@@ -27,7 +26,7 @@ export function NoResultRecommendations({country, language}) {
         title="Trending Products"
         data={data.featuredProducts.nodes}
       />
-    </Suspense>
+    </>
   );
 }
 

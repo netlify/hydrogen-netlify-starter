@@ -1,6 +1,3 @@
 [build]
 publish = "dist/client"
-command = "yarn build"
-
-[dev]
-framework = "#static"
+command = "npm run build"

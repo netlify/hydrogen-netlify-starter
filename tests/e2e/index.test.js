@@ -21,5 +21,5 @@ describe('index', () => {
   it('should be a 200 response', async () => {
     const response = await session.visit('/');
     expect(response.status()).toBe(200);
-  }, 60000);
+  });
 });

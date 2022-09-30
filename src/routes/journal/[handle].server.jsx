@@ -9,7 +9,7 @@ import {
 import {Suspense} from 'react';
 
 import {CustomFont, PageHeader, Section} from '~/components';
-import {Layout} from '~/components/index.server';
+import {Layout, NotFound} from '~/components/index.server';
 import {ATTR_LOADING_EAGER} from '~/lib/const';
 
 const BLOG_HANDLE = 'journal';
@@ -32,7 +32,7 @@ export default function Post({params, response}) {
   });
 
   if (!data?.blog?.articleByHandle) {
-    return <div>Article not found</div>;
+    return <NotFound />;
   }
 
   const {title, publishedAt, contentHtml, author} = data.blog.articleByHandle;

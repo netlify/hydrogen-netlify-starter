@@ -21,12 +21,7 @@ export default function Register({response}) {
 export async function api(request, {queryShop}) {
   const jsonBody = await request.json();
 
-  if (
-    !jsonBody.email ||
-    jsonBody.email === '' ||
-    !jsonBody.password ||
-    jsonBody.password === ''
-  ) {
+  if (!jsonBody.email || !jsonBody.password) {
     return new Response(
       JSON.stringify({error: 'Email and password are required'}),
       {status: 400},

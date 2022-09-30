@@ -24,7 +24,10 @@ export function ProductDetail({title, content, learnMore}) {
           </Disclosure.Button>
 
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
-            <Text as="div">{content}</Text>
+            <div
+              className="prose dark:prose-invert"
+              dangerouslySetInnerHTML={{__html: content}}
+            />
             {learnMore && (
               <div className="">
                 <Link

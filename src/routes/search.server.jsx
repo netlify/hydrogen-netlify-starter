@@ -4,6 +4,7 @@ import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import {ProductGrid, Section, Text} from '~/components';
 import {NoResultRecommendations, SearchPage} from '~/components/index.server';
 import {PAGINATION_SIZE} from '~/lib/const';
+import {Suspense} from 'react';
 
 export default function Search({pageBy = PAGINATION_SIZE, params}) {
   const {
@@ -39,10 +40,12 @@ export default function Search({pageBy = PAGINATION_SIZE, params}) {
             <Text className="opacity-50">No results, try something else.</Text>
           </Section>
         )}
-        <NoResultRecommendations
-          country={countryCode}
-          language={languageCode}
-        />
+        <Suspense>
+          <NoResultRecommendations
+            country={countryCode}
+            language={languageCode}
+          />
+        </Suspense>
       </SearchPage>
     );
   }
