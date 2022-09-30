@@ -1,11 +1,25 @@
-import {useShopQuery, useLocalization, gql, Seo} from '@shopify/hydrogen';
 import {Suspense} from 'react';
+import {useShopQuery, useLocalization, gql, Seo} from '@shopify/hydrogen';
 
 import {PageHeader, Section, Grid} from '~/components';
 import {Layout, CollectionCard} from '~/components/index.server';
 import {getImageLoadingPriority, PAGINATION_SIZE} from '~/lib/const';
 
 export default function Collections() {
+  return (
+    <Layout>
+      <Seo type="page" data={{title: 'All Collections'}} />
+      <PageHeader heading="Collections" />
+      <Section>
+        <Suspense>
+          <CollectionGrid />
+        </Suspense>
+      </Section>
+    </Layout>
+  );
+}
+
+function CollectionGrid() {
   const {
     language: {isoCode: languageCode},
     country: {isoCode: countryCode},
@@ -24,28 +38,15 @@ export default function Collections() {
   const collections = data.collections.nodes;
 
   return (
-    <Layout>
-      <Suspense>
-        <Seo
-          type="page"
-          data={{
-            title: 'All Collections',
-          }}
+    <Grid items={collections.length === 3 ? 3 : 2}>
+      {collections.map((collection, i) => (
+        <CollectionCard
+          collection={collection}
+          key={collection.id}
+          loading={getImageLoadingPriority(i, 2)}
         />
-      </Suspense>
-      <PageHeader heading="Collections" />
-      <Section>
-        <Grid items={collections.length === 3 ? 3 : 2}>
-          {collections.map((collection, i) => (
-            <CollectionCard
-              collection={collection}
-              key={collection.id}
-              loading={getImageLoadingPriority(i, 2)}
-            />
-          ))}
-        </Grid>
-      </Section>
-    </Layout>
+      ))}
+    </Grid>
   );
 }
 

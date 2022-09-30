@@ -63,7 +63,7 @@ export default function Collection({params}) {
       </PageHeader>
       <Section>
         <ProductGrid
-          key="collections"
+          key={collection.id}
           collection={collection}
           url={`/collections/${handle}?country=${country}`}
         />

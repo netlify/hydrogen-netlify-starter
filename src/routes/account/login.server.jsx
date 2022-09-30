@@ -42,12 +42,7 @@ export async function api(request, {session, queryShop}) {
 
   const jsonBody = await request.json();
 
-  if (
-    !jsonBody.email ||
-    jsonBody.email === '' ||
-    !jsonBody.password ||
-    jsonBody.password === ''
-  ) {
+  if (!jsonBody.email || !jsonBody.password) {
     return new Response(
       JSON.stringify({error: 'Incorrect email or password.'}),
       {status: 400},

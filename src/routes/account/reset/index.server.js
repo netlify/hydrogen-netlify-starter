@@ -14,14 +14,7 @@ export async function api(request, {session, queryShop}) {
 
   const jsonBody = await request.json();
 
-  if (
-    !jsonBody.id ||
-    jsonBody.id === '' ||
-    !jsonBody.password ||
-    jsonBody.password === '' ||
-    !jsonBody.resetToken ||
-    jsonBody.resetToken === ''
-  ) {
+  if (!jsonBody.id || !jsonBody.password || !jsonBody.resetToken) {
     return new Response(
       JSON.stringify({error: 'Incorrect password or reset token.'}),
       {

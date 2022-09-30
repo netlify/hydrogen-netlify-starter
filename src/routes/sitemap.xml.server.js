@@ -32,7 +32,7 @@ function shopSitemap(data, baseUrl) {
         changeFreq: 'daily',
       };
 
-      if (product.featuredImage.url) {
+      if (product.featuredImage?.url) {
         finalObject.image = {
           url: product.featuredImage.url,
         };
@@ -44,9 +44,9 @@ function shopSitemap(data, baseUrl) {
         if (product.featuredImage.altText) {
           finalObject.image.caption = product.featuredImage.altText;
         }
-
-        return finalObject;
       }
+
+      return finalObject;
     });
 
   const collectionsData = flattenConnection(data.collections)

@@ -16,6 +16,20 @@ const BLOG_HANDLE = 'Journal';
 
 export default function Blog({pageBy = PAGINATION_SIZE, response}) {
   response.cache(CacheLong());
+
+  return (
+    <Layout>
+      <Seo type="page" data={{title: 'All Journals'}} />
+      <PageHeader heading={BLOG_HANDLE} className="gap-0">
+        <Suspense>
+          <JournalsGrid pageBy={pageBy} />
+        </Suspense>
+      </PageHeader>
+    </Layout>
+  );
+}
+
+function JournalsGrid({pageBy}) {
   const {
     language: {isoCode: languageCode},
     country: {isoCode: countryCode},
@@ -45,33 +59,23 @@ export default function Blog({pageBy = PAGINATION_SIZE, response}) {
     };
   });
 
-  const haveArticles = articles.length > 0;
+  if (articles.length === 0) {
+    return <p>No articles found</p>;
+  }
 
   return (
-    <Layout>
-      <Suspense>
-        {/* @ts-expect-error Blog article types are not yet supported by TS */}
-        <Seo type="page" data={articles} />
-      </Suspense>
-      <PageHeader heading={BLOG_HANDLE} className="gap-0">
-        {haveArticles ? (
-          <Grid as="ol" layout="blog" gap="blog">
-            {articles.map((article, i) => {
-              return (
-                <ArticleCard
-                  blogHandle={BLOG_HANDLE.toLowerCase()}
-                  article={article}
-                  key={article.id}
-                  loading={getImageLoadingPriority(i, 2)}
-                />
-              );
-            })}
-          </Grid>
-        ) : (
-          <p>No articles found</p>
-        )}
-      </PageHeader>
-    </Layout>
+    <Grid as="ol" layout="blog" gap="blog">
+      {articles.map((article, i) => {
+        return (
+          <ArticleCard
+            blogHandle={BLOG_HANDLE.toLowerCase()}
+            article={article}
+            key={article.id}
+            loading={getImageLoadingPriority(i, 2)}
+          />
+        );
+      })}
+    </Grid>
   );
 }
 

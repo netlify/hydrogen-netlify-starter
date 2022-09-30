@@ -1,12 +1,26 @@
+import {Suspense} from 'react';
 import {useShopQuery, gql, useLocalization, Seo} from '@shopify/hydrogen';
 
 import {PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import {PAGINATION_SIZE} from '~/lib/const';
 import {ProductGrid, PageHeader, Section} from '~/components';
 import {Layout} from '~/components/index.server';
-import {Suspense} from 'react';
 
 export default function AllProducts() {
+  return (
+    <Layout>
+      <Seo type="page" data={{title: 'All Products'}} />
+      <PageHeader heading="All Products" variant="allCollections" />
+      <Section>
+        <Suspense>
+          <AllProductsGrid />
+        </Suspense>
+      </Section>
+    </Layout>
+  );
+}
+
+function AllProductsGrid() {
   const {
     language: {isoCode: languageCode},
     country: {isoCode: countryCode},
@@ -25,24 +39,11 @@ export default function AllProducts() {
   const products = data.products;
 
   return (
-    <Layout>
-      <Suspense>
-        <Seo
-          type="page"
-          data={{
-            title: 'All Products',
-          }}
-        />
-      </Suspense>
-      <PageHeader heading="All Products" variant="allCollections" />
-      <Section>
-        <ProductGrid
-          key="products"
-          url={`/products?country=${countryCode}`}
-          collection={{products}}
-        />
-      </Section>
-    </Layout>
+    <ProductGrid
+      key="products"
+      url={`/products?country=${countryCode}`}
+      collection={{products}}
+    />
   );
 }
 

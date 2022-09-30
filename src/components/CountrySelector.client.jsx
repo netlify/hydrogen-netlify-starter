@@ -97,29 +97,48 @@ export function CountrySelector() {
 }
 
 export function Countries({selectedCountry, getClassName}) {
-  const countries = fetchSync('/api/countries').json();
+  const response = fetchSync('/api/countries');
 
-  return (countries || []).map((country) => {
-    const isSelected = country.isoCode === selectedCountry.isoCode;
+  let countries;
 
-    return (
-      <Listbox.Option key={country.isoCode} value={country}>
-        {/* @ts-expect-error @headlessui/react incompatibility with node16 resolution */}
-        {({active}) => (
-          <div
-            className={`text-contrast dark:text-primary ${getClassName(
-              active,
-            )}`}
-          >
-            {country.name}
-            {isSelected ? (
-              <span className="ml-2">
-                <IconCheck />
-              </span>
-            ) : null}
-          </div>
-        )}
-      </Listbox.Option>
+  if (response.ok) {
+    countries = response.json();
+  } else {
+    console.error(
+      `Unable to load available countries ${response.url} returned a ${response.status}`,
     );
-  });
+  }
+
+  return countries ? (
+    countries.map((country) => {
+      const isSelected = country.isoCode === selectedCountry.isoCode;
+
+      return (
+        <Listbox.Option key={country.isoCode} value={country}>
+          {/* @ts-expect-error @headlessui/react incompatibility with node16 resolution */}
+          {({active}) => (
+            <div
+              className={`text-contrast dark:text-primary ${getClassName(
+                active,
+              )}`}
+            >
+              {country.name}
+              {isSelected ? (
+                <span className="ml-2">
+                  <IconCheck />
+                </span>
+              ) : null}
+            </div>
+          )}
+        </Listbox.Option>
+      );
+    })
+  ) : (
+    <div className="flex justify-center">
+      <div className="mt-4 text-center">
+        <div>Unable to load available countries.</div>
+        <div>Please try again.</div>
+      </div>
+    </div>
+  );
 }

@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {useNavigate, Link} from '@shopify/hydrogen/client';
+import {getInputStyleClasses} from '../../lib/styleUtils';
 
 export function AccountLoginForm({shopName}) {
   const navigate = useNavigate();
@@ -128,9 +129,7 @@ function EmailField({email, setEmail, emailError, shopName}) {
     <>
       <div className="mb-3">
         <input
-          className={`mb-1 appearance-none rounded border w-full py-2 px-3 text-primary/90 placeholder:text-primary/50 leading-tight focus:shadow-outline ${
-            emailError ? ' border-red-500' : 'border-gray-900'
-          }`}
+          className={`mb-1 ${getInputStyleClasses(emailError)}`}
           id="email"
           name="email"
           type="email"
@@ -153,7 +152,7 @@ function EmailField({email, setEmail, emailError, shopName}) {
       </div>
       <div className="flex items-center justify-between">
         <button
-          className="bg-gray-900 rounded text-contrast py-2 px-4 focus:shadow-outline block w-full"
+          className="bg-primary rounded text-contrast py-2 px-4 focus:shadow-outline block w-full"
           type="submit"
         >
           Next
@@ -202,9 +201,7 @@ function PasswordField({password, setPassword, passwordError}) {
     <>
       <div className="mb-3">
         <input
-          className={`mb-1 appearance-none rounded border w-full py-2 px-3 text-primary/90 placeholder:text-primary/50 leading-tight focus:shadow-outline ${
-            passwordError ? ' border-red-500' : 'border-gray-900'
-          }`}
+          className={`mb-1 ${getInputStyleClasses(passwordError)}`}
           id="password"
           name="password"
           type="password"
@@ -228,7 +225,7 @@ function PasswordField({password, setPassword, passwordError}) {
       </div>
       <div className="flex items-center justify-between">
         <button
-          className="bg-gray-900 text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
+          className="bg-primary text-contrast rounded py-2 px-4 focus:shadow-outline block w-full"
           type="submit"
         >
           Sign in
