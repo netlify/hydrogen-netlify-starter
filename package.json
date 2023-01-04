@@ -8,8 +8,9 @@
     "node": ">=16.14.0"
   },
   "scripts": {
-    "dev": "shopify hydrogen dev",
-    "build": "shopify hydrogen build",
+    "dev": "npm run partytown && shopify hydrogen dev",
+    "build": "npm run partytown && shopify hydrogen build",
+    "partytown": "partytown copylib public/~partytown",
     "preview": "shopify hydrogen preview",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "lint-ts": "tsc --noEmit",
@@ -36,6 +37,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
+    "@builder.io/partytown": "^0.7.3",
     "@headlessui/react": "^1.7.0",
     "@shopify/hydrogen": "^1.4.3",
     "clsx": "^1.1.1",
