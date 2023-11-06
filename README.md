@@ -1,6 +1,4 @@
-# Hydrogen Demo Store Starter Template
-
-<a href="https://app.netlify.com/start/deploy?repository=https://github.com/netlify/hydrogen-netlify-starter"><img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify"></a>
+# ⚠️ This template is deprecated. Please use [the new template](https://github.com/netlify/hydrogen-template)
 
 [Hydrogen](https://shopify.dev/custom-storefronts/hydrogen) is a React framework and Software Development Kit (SDK) that can be used to build fast and dynamic custom Shopify storefronts.
 
